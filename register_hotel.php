@@ -17,7 +17,7 @@
 	<span class="navbar-brand mb-0 h1">Register Hotel</span>
 	</nav>
 	<p></p>
-	<form action ="register_insert.php" method='post'>
+	<form action ="register_insert_hotel.php" method='post'>
 	<div class="container">
 	<div class="row">
 	<div class="col-sm"><h5>Hotel Name</h5></div>
@@ -28,10 +28,6 @@
 	<div class="col-sm"><input type="text" name="location"></div>
 	<div class="col-sm"></div>
 	<div class="w-100"> </div>
-	<div class="col-sm"><h5>Room Type</h5></div>
-	<div class="col-sm"><input type="checkbox" id="standard" name="standard" value="standard">
-	<div class="col-sm"><input type="checkbox" id="deluxe" name="deluxe" value="deluxe">
-	<div class="col-sm"><input type="checkbox" id="suite" name="suite" value="suite">
 	
 </div>
 	<p></p>

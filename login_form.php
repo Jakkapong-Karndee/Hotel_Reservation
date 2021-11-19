@@ -25,6 +25,7 @@ header("location: main.php"); // Redirecting To Profile Page
           <input type="password" placeholder="Enter Password" name="password" required></h2>
 
                 <button type = "submit" class ="btn btn-primary" name ="login" >Login</button>
+                <button type = "submit" class ="btn btn-primary" name ="register" >Register</button>
         </div>
       
         <div class="containerlogin" style="background-color:#f1f1f1">
