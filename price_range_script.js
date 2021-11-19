@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
 
 	$('#price-range-submit').hide();
@@ -50,7 +51,7 @@ $(document).ready(function () {
 			orientation: "horizontal",
 			min: min_price_sql,
 			max: max_price_sql,
-			values: [1000, 8000],
+			values: [min_price_sql, max_price_sql],
 			step: 100,
 
 			slide: function (event, ui) {
