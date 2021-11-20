@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 		<title>Register Hotel</title>
 	</head>
 	<body>
 	<p></p>
-	<nav class="navbar" style ='height:80px; background-color: dodgerblue;'>
-	<span class="navbar-brand mb-0 h1">Register Hotel</span>
-	</nav>
+	<nav class="navbar navbar-light bg-light">
+  <span class="navbar-brand mb-0 h1">Register Hotel</span>
+</nav>
 	<p></p>
 	<form action ="register_insert_hotel.php" method='post'>
 	<div class="container">
@@ -31,7 +31,7 @@
 	
 </div>
 	<p></p>
-	<button type='submit' name='submit' value = 'Submit'>Register</button>
+	<button class ='btn btn-danger' type='submit' name='submit' value = 'Submit'>Register</button>
 	<p></p>
 	</form>
 	<a class ='btn btn-primary' href ='main.php'>Back</a>
