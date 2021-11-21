@@ -22,7 +22,6 @@ else {
     }
     $query = "SELECT booking_id,hotel_room.room_no,date_start,date_end FROM booking INNER JOIN hotel_room ON booking.room_id = hotel_room.room_id WHERE guest_id = $guest_id";
 }
-$_SESSION['query'] = $query;
 $statement = $mysqli->query($query);
 
 while ($row = $statement->fetch_array()) {
@@ -32,6 +31,6 @@ while ($row = $statement->fetch_array()) {
         'start'   => $row["date_start"],
         'end'   => $row["date_end"]
     );
-    $_SESSION['data'] = $data;
 }
+echo json_encode($data);
 ?>
