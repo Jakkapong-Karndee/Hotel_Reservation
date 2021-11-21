@@ -14,12 +14,20 @@
 	<title>Register Hotel Room</title>
 </head>
 
-<body>
-	<p></p>
-	<nav class="navbar navbar-light bg-light">
-		<span class="navbar-brand mb-0 h1">Register Hotel Room</span>
+<body class="p-3 mb-2 bg-light text-dark">
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container"> <a class="navbar-brand" href="#">
+				<b> Hotel_reservation</b>
+			</a>
+			<ul class="nav pi-draggable" draggable="true">
+				<li class="nav-item">
+					<a class="btn btn-danger" type="button" href="logout.php">logout</a>
+				</li>
+			</ul>
+		</div>
 	</nav>
-	<p></p>
+
+	<h2>Register Hotel Room</h2>
 	<form action="register_insert_hotel_room.php" method='post'>
 		<div class="container">
 			<!-- Row 1 -->
@@ -102,12 +110,13 @@
 				</div>
 				<div class="col-sm"></div>
 			</div>
+			<button class='btn btn-danger' type='submit' name='room_submit' value='Submit'>Register</button>
+			<p></p>
+			<a class='btn btn-primary' href='main.php'>Back</a>
 		</div>
-		<button class ='btn btn-danger' type='submit' name='room_submit' value = 'Submit'>Register</button>
 	</form>
-	<p></p>
-	<a class='btn btn-primary' href='main.php'>Back</a>
-	
+
+
 </body>
 
 </html>
