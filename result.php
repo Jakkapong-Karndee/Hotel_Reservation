@@ -19,21 +19,16 @@ $User_ID = $_SESSION['User_ID'];
     <?php
     if (isset($_POST['booking_submit'])) {
         unset($_POST['booking_submit']);
-        $datesearch = $_POST['datesearch'];
-        $datearray = explode(" - ", $datesearch);
-        $check_in = $datearray[0];
-        $check_out = $datearray[1];
-        echo $check_in;
-        echo $check_out;
-        unset($_POST['datesearch']);
+        $check_in = $_POST['check_in'];
+        $check_out = $_POST['check_out'];
+        unset($_POST['check_in']);
+        unset($_POST['check_out']);
         foreach ($_POST as $key => $value) {
             if ($value == '0') {
                 unset($_POST[$key]);
             }
         }
-        foreach ($_POST as $key => $value) {
-            echo "POST parameter '$key' has '$value' \n";
-        }
+        
     ?>
         <div class="py-5">
             <div class="container">
@@ -53,6 +48,7 @@ $User_ID = $_SESSION['User_ID'];
                                         <th>Room Type</th>
                                         <th>Check-In Date</th>
                                         <th>Check-Out Date</th>
+                                        
                                         <th>Cost</th>
                                     </tr>
                                 </thead>
@@ -74,6 +70,10 @@ $User_ID = $_SESSION['User_ID'];
                                             echo "Select failed. Error: " . $mysqli->error;
                                             return false;
                                         }
+                                        $date1 = new DateTime($check_out);
+                                        $date2 = new DateTime($check_in);
+                                        $diff = date_diff($date1, $date2);
+                                        $day = ($diff->format('%a'));
                                         while ($row = $result->fetch_assoc()) { ?>
 
                                             <tr>
@@ -82,10 +82,10 @@ $User_ID = $_SESSION['User_ID'];
                                                 <td><?= $row['room_type_name'] ?></td>
                                                 <td><?= $check_in ?></td>
                                                 <td><?= $check_out ?></td>
-                                                <td><?= $row['price'] ?></td>
+                                                <td><?= ($row['price'] * $day) ?></td>
 
                                                 <?php
-                                                $price = $price + $row['price'];
+                                                $price = $price + ($row['price'] * $day);
                                                 $data[] = array(
                                                     'room_id'   => $row["room_id"],
                                                     'hotel_id'   => $row["hotel_id"],
@@ -96,8 +96,16 @@ $User_ID = $_SESSION['User_ID'];
                                         <?php } ?>
                                 </tbody>
                             </table>
+                            <!--  
+                $date1 = new DateTime($row['Form_DateStart']);
+                  $date2 = new DateTime($row['Form_DateEnd']);
+                  $diff = date_diff($date2, $date1);
+                  $remain = $row['User_Quota'] - $diff->format('%a');
+                  SELECT DATEDIFF(day, '2017/08/25 07:00', '2017/08/25 12:45') AS DateDiff;
+                -->
                             <h5>Total Price : </h5>
                             <?php
+
                             echo $price;
                             ?>
                             <div class="col-md-12 text-center d-md-flex justify-content-between align-items-center">
@@ -127,7 +135,7 @@ $User_ID = $_SESSION['User_ID'];
         </div>
     <?php
     }
-    
+
 
     ?>
 </body>

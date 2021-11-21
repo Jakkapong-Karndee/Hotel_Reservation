@@ -1,6 +1,6 @@
 <?php require_once('connect.php');
 session_start();
-$User_ID = $_SESSION['User_ID'];
+
 
 ?>
 <!DOCTYPE html>
@@ -17,6 +17,70 @@ $User_ID = $_SESSION['User_ID'];
     <div class="py-5">
         <div class="container p-3 mb-2 bg-light text-dark">
             <div class="row">
+                <h1 class="display-4">List of Transaction</h1>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Booking ID</th>
+                            <th>Hotel ID</th>
+                            <th>Room ID</th>
+                            <th>Payment Method</th>
+                            <th>Payment Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $q = "SELECT `transaction`.transaction_id , booking.booking_id, booking.hotel_id, booking.room_id, payment_type  from `transaction` inner join booking on `transaction`.transaction_id = booking.transaction_id group by transaction_id;";
+                        $result = $mysqli->query($q);
+                        if (!$result) {
+                            echo "Select failed. Error: " . $mysqli->error;
+                            return false;
+                        }
+
+                        while ($row = $result->fetch_array()) { ?>
+                            <?php if (!isset($row['payment_type'])) {
+                                $row['payment_type'] = "Not Paid";
+                            } ?>
+                            <tr>
+                                <td><?= $row['transaction_id'] ?></td>
+                                <td><?= $row['booking_id'] ?></td>
+                                <td><?= $row['hotel_id'] ?></td>
+                                <td><?= $row['room_id'] ?></td>
+                                <td><?= $row['payment_type'] ?></td>
+                                <form action='manage_hotel_room_payment_status.php' method='post'>
+                                    <td><select name="payment_status">
+                                            <option value="paid">Paid</option>
+                                            <option value="unpaid">Unpaid</option>
+                                        </select>
+                                        <input type='hidden' name='transaction_id' value="<?= $row['transaction_id'] ?> ">
+                                        <input type='hidden' name='booking_id' value=" <?= $row['booking_id'] ?> ">
+                                        <button class="btn btn-success" name="update_payment_status" type="submit">Update</button>
+                                </form>
+                                </td>
+                                <form action='manage_hotel_room.php' method='post'>
+                                    <td><button class="btn btn-success" name="view_transaction" type="submit">View</button></td>
+
+                                    <?php
+
+                                    echo "<input type='hidden' name='transaction_id' value=" . $row['transaction_id'] . ">";
+                                    echo "<input type='hidden' name='hotel_id' value=" . $row['hotel_id'] . ">";
+                                    echo "<input type='hidden' name='room_id' value=" . $row['room_id'] . ">";
+                                    echo "<input type='hidden' name='payment_type' value=" . $row['payment_type'] . ">";
+                                    echo "<input type='hidden' name='booking_id' value=" . $row['booking_id'] . ">";
+                                    ?>
+                                </form>
+                            <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <div class="container p-3 mb-2 bg-light text-dark">
+            <div class="row">
                 <div class="col-md-12">
                     <h1 class="display-4">Manage Hotel Room</h1>
                 </div>
@@ -27,57 +91,58 @@ $User_ID = $_SESSION['User_ID'];
                         <table class="table table-striped">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>User ID</th>
-                                    <th>Hotel Name</th>
+                                    <th>Transaction ID</th>
+                                    <th>Guest ID</th>
                                     <th>Room No.</th>
-                                    <th>Room Type</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
                                     <th>Room Status</th>
-                                    <th>Payment Status</th>
+
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $q = "select user.user_id AS 'User ID', hotel.hotel_name AS 'Hotel Name', hotel_room.room_no AS 'Room No',room_type.room_type_name AS 'Room Type', booking.date_start AS 'Start Date',booking.date_end AS 'End Date',hotel_room.room_status AS 'Room Status',transaction.payment_status AS 'Payment Status' from hotel 
-                                inner join hotel_room on hotel.hotel_id = hotel_room.hotel_id 
-                                inner join room_type on hotel_room.room_type_id = room_type.room_type_id 
-                                inner join booking on hotel.hotel_id = booking.hotel_id 
-                                inner join transaction on booking.transaction_id = transaction.transaction_id 
-                                inner join guest_detail on booking.guest_id = guest_detail.guest_id 
-                                inner join user on guest_detail.user_id = user.user_id;";
-                                $result = $mysqli->query($q);
-                                if (!$result) {
-                                    echo "Select failed. Error: " . $mysqli->error;
-                                    return false;
-                                }
+                                <?php if (isset($_POST['view_transaction'])) {
+                                    $transaction_id = $_POST["transaction_id"];
+                                    $hotel_id = $_POST["hotel_id"];
+                                    $room_id = $_POST["room_id"];
 
-                                while ($row = $result->fetch_array()) { ?>
-                                <?php if (!isset($row['payment_status'])) {
-                                        $row['payment_status'] = "Not Paid";
+                                    $q2 = "select booking.transaction_id,guest_id, room_no,date_start, date_end, booking.room_id, booking.hotel_id, payment_type from booking 
+                                    inner join transaction on booking.transaction_id = transaction.transaction_id 
+                                    inner join hotel_room on booking.room_id = hotel_room.room_id 
+                                    where booking.transaction_id = '$transaction_id' ;";
+                                    $result = $mysqli->query($q2);
+                                    if (!$result) {
+                                        echo "Select failed. Error: " . $mysqli->error;
+                                        return false;
                                     }
-                                } ?>
 
-                                <tr>
-                                    <td><?= $row['user_id'] ?></td>
-                                    <td><?= $row['hotel_name'] ?></td>
-                                    <td><?= $row['room_no'] ?></td>
-                                    <td><?= $row['room_type_name'] ?></td>
-                                    <td><?= $row['date_start'] ?></td>
-                                    <td><?= $row['date_end'] ?></td>
-                                    <td><?= $row['room_status'] ?>
-                                        <!--<select name="room_status">
-                                            <option value="availabled">Availabled</option>
-                                            <option value="reserved">Reserved</option>
-                                        </select>-->
-                                    </td>
-                                    <td><?= $row['payment_status'] ?>
-                                        <!--<select name="payment_status">
-                                            <option value="paid">Paid</option>
-                                            <option value="Not Paid">Not Paid</option>
-                                        </select>-->
-                                    </td>
-                                    <td>
+                                    while ($row = $result->fetch_array()) { ?>
+                                        <form action='manage_hotel_room_update.php' method='post'>
+                                            <tr>
+                                                <td><?= $row['transaction_id'] ?></td>
+                                                <td><?= $row['guest_id'] ?></td>
+                                                <td><?= $row['room_no'] ?></td>
+                                                <td><?= $row['date_start'] ?></td>
+                                                <td><?= $row['date_end'] ?></td>
+                                                <td><select name="room_status">
+                                                        <option value="Available">Available</option>
+                                                        <option value="Unavailable">Unavailable</option>
+                                                        
+                                                    </select>
+                                                    <?php
+                                                    echo "<input type='hidden' name='transaction_id' value=" . $row['transaction_id'] . ">";
+                                                    echo "<input type='hidden' name='hotel_id' value=" . $row['hotel_id'] . ">";
+                                                    echo "<input type='hidden' name='room_id' value=" . $row['room_id'] . ">";
+                                                    echo "<input type='hidden' name='payment_type' value=" . $row['payment_type'] . ">";
+                                                    ?>
+                                                    <button class="btn btn-success" name="update_hotel_room_status" type="submit">Update</button>
+                                                </td>
+                                            </tr>
+                                            </form>
+                                        <?php } ?>
+                                        
+                                    <?php } ?>
                             </tbody>
                         </table>
                         <div class="col-md-12 text-center d-md-flex justify-content-between align-items-center">

@@ -35,14 +35,15 @@ $User_ID = $_SESSION['User_ID'];
             </thead>
             <tbody>
                 <?php
-                $q = "select `transaction`.transaction_id as 'Transaction ID', hotel.hotel_name as 'Hotel Name', hotel_room.room_no as 'Room No.', room_type.room_type_name as 'Room Type', `transaction`.total_cost as 'Total Cost', `transaction`.payment_type as 'Payment Type', booking.date_start as 'Start Reserve Date',booking.date_end as 'End Reserve Date', `transaction`.payment_status as 'Payment Status' from hotel 
-                                inner join hotel_room on hotel.hotel_id = hotel_room.hotel_id 
-                                inner join room_type on hotel_room.room_type_id = room_type.room_type_id 
-                                inner join booking on hotel.hotel_id = booking.hotel_id 
-                                inner join `transaction` on booking.booking_id = `transaction`.booking_id 
-                                inner join guest_detail on booking.guest_id = guest_detail.guest_id 
-                                inner join user on guest_detail.user_id = user.user_id 
-                                inner join staff_detail on user.user_id = staff_detail.user_id;";
+                $q = "select booking.transaction_id,hotel_name, room_no,room_type_name,total_cost,payment_type,date_start, date_end, payment_status,price from
+                booking 
+                inner join transaction on booking.transaction_id = transaction.transaction_id 
+                inner join hotel_room on booking.room_id = hotel_room.room_id 
+                INNER JOIN hotel ON booking.hotel_id = hotel.hotel_id
+                INNER JOIN room_type ON room_type.room_type_id = hotel_room.room_type_id
+                INNER JOIN guest_detail ON booking.guest_id = guest_detail.guest_id
+                INNER JOIN user ON user.user_id = guest_detail.user_id
+                where user.user_id = '$User_ID' ;";
                 $result = $mysqli->query($q);
                 if (!$result) {
                     echo "Select failed. Error: " . $mysqli->error;
@@ -50,7 +51,7 @@ $User_ID = $_SESSION['User_ID'];
                 }
 
                 while ($row = $result->fetch_array()) { ?>
-                <?php } ?>
+                <?php ?>
                 <tr>
                     <td><?= $row['transaction_id'] ?></td>
                     <td><?= $row['hotel_name'] ?></td>
@@ -67,10 +68,11 @@ $User_ID = $_SESSION['User_ID'];
                             </select> -->
 
                 </tr>
+            <?php } ?>
             </tbody>
         </table>
     </div>
-    </ul> <a><button class="btn btn-primary" href="main.php">Back</button></a>
+    </ul> <a class="btn btn-primary" href="main.php">Back</a>
 </body>
 
 </html>

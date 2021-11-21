@@ -37,7 +37,7 @@ while ($row = $result->fetch_array()) {
             }
 
     }
-
+    header("Location: your_room.php");	
 }
 
 ?>

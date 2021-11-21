@@ -37,11 +37,13 @@
                 <div class="col-sm">
                     <h5>Gender</h5>
                 </div>
+                <div class="col-sm">
                 <Select name="gender">
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Other">Other</option>
                 </select>
+                </div>
                 <div class="col-sm"></div>
                 <div class="w-100"> </div>
                 <div class="col-sm">

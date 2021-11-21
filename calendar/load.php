@@ -1,40 +1,37 @@
 <?php
 session_start();
 $User_ID = $_SESSION['User_ID'];
-$User_position = $_SESSION['user_position'];
+$position = $_SESSION['position'];
 //load calendar
 
 require("../connect.php");
 
 $data = array();
-if ($User_position == 'hr'){
-    $query = "SELECT Event_ID,Event_Name,Event_Date_Start,Event_Date_End FROM company_event";
+if ($position == 'Staff') {
+    $query = "SELECT booking_id,hotel_room.room_no,date_start,date_end FROM booking INNER JOIN hotel_room ON booking.room_id = hotel_room.room_id";
+} 
+else {
+    $q = "SELECT guest_id FROM user INNER JOIN guest_detail ON user.user_id = guest_detail.user_id WHERE user.user_id = $User_ID";
+    $result = $mysqli->query($q);
+    if (!$result) {
+        echo "Select failed. Error: " . $mysqli->error;
+        return false;
+    }
+    while ($row = $result->fetch_array()) {
+        $guest_id = $row[0];
+    }
+    $query = "SELECT booking_id,hotel_room.room_no,date_start,date_end FROM booking INNER JOIN hotel_room ON booking.room_id = hotel_room.room_id WHERE guest_id = $guest_id";
 }
-else{
-$query = "SELECT company_event.Event_ID,Event_Name,Event_Date_Start,Event_Date_End FROM company_event INNER JOIN user_has_company_event ON company_event.Event_ID = user_has_company_event.Event_ID WHERE user_has_company_event.User_ID = $User_ID;";
+$_SESSION['query'] = $query;
 $statement = $mysqli->query($query);
 
-while($row = $statement->fetch_array())
-{
- $data[] = array(
-  'id'   => $row["Event_ID"],
-  'title'   => $row["Event_Name"],
-  'start'   => $row["Event_Date_Start"],
-  'end'   => $row["Event_Date_End"]
- );
+while ($row = $statement->fetch_array()) {
+    $data[] = array(
+        'id'   => $row["booking_id"],
+        'title'   => "room: ".$row["room_no"],
+        'start'   => $row["date_start"],
+        'end'   => $row["date_end"]
+    );
+    $_SESSION['data'] = $data;
 }
-$query = "SELECT Event_ID,Event_Name,Event_Date_Start,Event_Date_End FROM company_event WHERE Event_Detail = 'all'";
-}
-$statement = $mysqli->query($query);
-
-while($row = $statement->fetch_array())
-{
- $data[] = array(
-  'id'   => $row["Event_ID"],
-  'title'   => $row["Event_Name"],
-  'start'   => $row["Event_Date_Start"],
-  'end'   => $row["Event_Date_End"]
- );
-}
-echo json_encode($data);
 ?>

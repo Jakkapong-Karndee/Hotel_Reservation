@@ -1,7 +1,7 @@
 
 		<?php
         require_once('connect.php');
-        if(isset($_POST['su'])) {
+        if(isset($_POST['room_submit'])) {
 		// Taking all  values from the form 
 
 		$hotel_name = $_POST['hotel_name'];

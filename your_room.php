@@ -33,12 +33,22 @@ $User_ID = $_SESSION['User_ID'];
             </thead>
             <tbody>
                 <?php
-                $q = "select hotel.hotel_name AS 'Hotel Name', hotel_room.room_no AS 'Room No',room_type.room_type_name AS 'Room Type', booking.date_start AS 'Start Booking Date',booking.date_end AS 'End Booking Date',hotel_room.room_status AS 'Room Status' from hotel 
-                                inner join hotel_room on hotel.hotel_id = hotel_room.hotel_id 
-                                inner join room_type on hotel_room.room_type_id = room_type.room_type_id 
-                                inner join booking on hotel.hotel_id = booking.hotel_id 
-                                inner join guest_detail on booking.guest_id = guest_detail.guest_id 
-                                inner join user on guest_detail.user_id = user.user_id;";
+                $q = "SELECT guest_id FROM user INNER JOIN guest_detail ON user.user_id = guest_detail.user_id WHERE user.user_id = $User_ID";
+                $result = $mysqli->query($q);
+                if (!$result) {
+                    echo "Select failed. Error: " . $mysqli->error;
+                    return false;
+                }
+                while ($row = $result->fetch_array()) {
+                    $guest_id = $row[0];
+                }
+                $q = "select hotel.hotel_name , hotel_room.room_no ,room_type.room_type_name, booking.date_start,booking.date_end ,hotel_room.room_status from 
+                booking inner join guest_detail on booking.guest_id = guest_detail.guest_id
+                inner join user on guest_detail.user_id = user.user_id 
+                                inner join hotel_room on booking.room_id = hotel_room.room_id    
+                                inner join hotel on booking.hotel_id = hotel.hotel_id 
+                                inner join room_type on hotel_room.room_type_id = room_type.room_type_id
+                                where guest_detail.guest_id = '$guest_id';";
                 $result = $mysqli->query($q);
                 if (!$result) {
                     echo "Select failed. Error: " . $mysqli->error;
@@ -46,30 +56,31 @@ $User_ID = $_SESSION['User_ID'];
                 }
 
                 while ($row = $result->fetch_array()) { ?>
-                <?php } ?>
-                <tr>
-                    <td><?= $row['hotel_name'] ?></td>
-                    <td><?= $row['room_no'] ?></td>
-                    <td><?= $row['room_type_name'] ?></td>
-                    <td><?= $row['date_start'] ?></td>
-                    <td><?= $row['date_end'] ?></td>
-                    <td><?= $row['room_status'] ?></td>
-                    <!--  <select name = "room_status" >
+
+                    <tr>
+                        <td><?= $row['hotel_name'] ?></td>
+                        <td><?= $row['room_no'] ?></td>
+                        <td><?= $row['room_type_name'] ?></td>
+                        <td><?= $row['date_start'] ?></td>
+                        <td><?= $row['date_end'] ?></td>
+                        <td><?= $row['room_status'] ?></td>
+                        <!--  <select name = "room_status" >
                               <option value ="availabled">Availabled</option>
                               <option value ="reserved">Reserved</option>
                             </select> -->
-                </tr>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </div>
-    <div class="row">
-        <a><button class="btn btn-success" href="search.php">Find Room</button></a>
-    </div>
+
+    <a class="btn btn-success" href="search.php">Find Room</a>
+
     <p>
     </p>
-    <div class="row">
-        <a><button class="btn btn-primary" href="main.php">Back</button></a>
-    </div>
+
+    <a class="btn btn-primary" href="main.php">Back</a>
+
 
 </body>
 

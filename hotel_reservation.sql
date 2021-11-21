@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2021 at 05:13 AM
+-- Generation Time: Nov 21, 2021 at 07:34 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -21,6 +21,21 @@ SET time_zone = "+00:00";
 -- Database: `hotel_reservation`
 --
 
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `range_insert` (IN `hotel_id` INT, IN `room_type_id` INT, IN `price` INT, IN `room_start` INT, IN `room_stop` INT)  BEGIN
+	DECLARE incRange INT;
+    SET incRange = room_start;
+    WHILE incRange <= room_stop DO
+		INSERT INTO hotel_room (hotel_room.hotel_id,  hotel_room.room_type_id, hotel_room.room_no, hotel_room.room_status,hotel_room.price) VALUES (hotel_id,room_type_id,incRange,'Available',price);
+            SET incRange = incRange + 1;
+     END WHILE;
+END$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -32,8 +47,9 @@ CREATE TABLE `booking` (
   `guest_id` int(11) DEFAULT NULL,
   `room_id` int(11) DEFAULT NULL,
   `hotel_id` int(11) DEFAULT NULL,
-  `date_start` date DEFAULT NULL,
-  `date_end` date DEFAULT NULL
+  `date_start` datetime DEFAULT NULL,
+  `date_end` datetime DEFAULT NULL,
+  `transaction_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -48,6 +64,13 @@ CREATE TABLE `guest_detail` (
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `guest_detail`
+--
+
+INSERT INTO `guest_detail` (`guest_id`, `passport_id`, `user_id`) VALUES
+(4, 32543453, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -59,6 +82,14 @@ CREATE TABLE `hotel` (
   `hotel_name` varchar(255) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel`
+--
+
+INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `location`) VALUES
+(4, 'John\'s hotel', 'Johnland'),
+(5, 'Jim Hotel', 'Jimland');
 
 -- --------------------------------------------------------
 
@@ -72,8 +103,26 @@ CREATE TABLE `hotel_room` (
   `room_type_id` int(11) DEFAULT NULL,
   `room_no` int(11) DEFAULT NULL,
   `room_status` varchar(20) DEFAULT NULL,
-  `price` int(11) DEFAULT NULL
+  `price` int(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel_room`
+--
+
+INSERT INTO `hotel_room` (`room_id`, `hotel_id`, `room_type_id`, `room_no`, `room_status`, `price`) VALUES
+(10, 4, 4, 100, 'Available', 1000),
+(11, 4, 4, 101, 'Available', 1000),
+(12, 4, 4, 102, 'Available', 1000),
+(13, 4, 4, 103, 'Available', 1000),
+(14, 4, 4, 104, 'Available', 1000),
+(15, 4, 4, 105, 'Available', 1000),
+(16, 4, 5, 200, 'Available', 2000),
+(17, 4, 5, 201, 'Available', 2000),
+(18, 4, 5, 202, 'Available', 2000),
+(19, 4, 5, 203, 'Available', 2000),
+(20, 5, 6, 300, 'Available', 3000),
+(21, 5, 6, 301, 'Available', 3000);
 
 -- --------------------------------------------------------
 
@@ -85,6 +134,15 @@ CREATE TABLE `room_type` (
   `room_type_id` int(11) NOT NULL,
   `room_type_name` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `room_type`
+--
+
+INSERT INTO `room_type` (`room_type_id`, `room_type_name`) VALUES
+(4, 'Standard'),
+(5, 'Deluxe'),
+(6, 'Suite');
 
 -- --------------------------------------------------------
 
@@ -99,6 +157,13 @@ CREATE TABLE `staff_detail` (
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `staff_detail`
+--
+
+INSERT INTO `staff_detail` (`staff_id`, `gender`, `address`, `user_id`) VALUES
+(4, 'Male', 'staff1', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -107,7 +172,6 @@ CREATE TABLE `staff_detail` (
 
 CREATE TABLE `transaction` (
   `transaction_id` int(11) NOT NULL,
-  `booking_id` int(11) DEFAULT NULL,
   `staff_id` int(11) DEFAULT NULL,
   `payment_type` varchar(20) DEFAULT NULL,
   `payment_status` varchar(20) DEFAULT NULL,
@@ -133,6 +197,14 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `email`, `phone`, `position`, `username`, `password`) VALUES
+(1, 'guest1', 'guest1', 'guest1', '45345453', 'Guest', 'guest1', 'guest1'),
+(2, 'staff1', 'staff1', 'staff1', '543', 'Staff', 'staff1', 'staff1');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -142,7 +214,8 @@ CREATE TABLE `user` (
 ALTER TABLE `booking`
   ADD PRIMARY KEY (`booking_id`),
   ADD KEY `guest_id` (`guest_id`,`room_id`,`hotel_id`),
-  ADD KEY `hotel_id` (`hotel_id`);
+  ADD KEY `hotel_id` (`hotel_id`),
+  ADD KEY `transaction_id` (`transaction_id`);
 
 --
 -- Indexes for table `guest_detail`
@@ -183,7 +256,6 @@ ALTER TABLE `staff_detail`
 --
 ALTER TABLE `transaction`
   ADD PRIMARY KEY (`transaction_id`),
-  ADD KEY `booking_id` (`booking_id`,`staff_id`),
   ADD KEY `staff_id` (`staff_id`);
 
 --
@@ -200,49 +272,49 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `guest_detail`
 --
 ALTER TABLE `guest_detail`
-  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `hotel_room`
 --
 ALTER TABLE `hotel_room`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `room_type`
 --
 ALTER TABLE `room_type`
-  MODIFY `room_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `room_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `staff_detail`
 --
 ALTER TABLE `staff_detail`
-  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(45) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(45) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -253,7 +325,8 @@ ALTER TABLE `user`
 --
 ALTER TABLE `booking`
   ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`guest_id`) REFERENCES `guest_detail` (`guest_id`),
-  ADD CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`);
+  ADD CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`),
+  ADD CONSTRAINT `booking_ibfk_3` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`);
 
 --
 -- Constraints for table `guest_detail`
@@ -278,8 +351,7 @@ ALTER TABLE `staff_detail`
 -- Constraints for table `transaction`
 --
 ALTER TABLE `transaction`
-  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff_detail` (`staff_id`),
-  ADD CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`);
+  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff_detail` (`staff_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

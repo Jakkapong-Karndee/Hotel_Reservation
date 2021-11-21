@@ -22,10 +22,11 @@ require_once("connect.php");
 </head>
 
 <body>
+<div class="container">
     <!-- Main Row  -->
     <div class="row">
         <!-- Main column 1 -->
-        <div class="col-sm">
+        <div class="col-sm vertical-center">
             <div class="container">
                 <form action="search.php" method='post'>
                     <h1 class="display-4" colour="white">Search</h1>
@@ -43,7 +44,7 @@ require_once("connect.php");
                             startDate: moment().startOf('hour'),
                             endDate: moment().startOf('hour').add(72, 'hour'),
                             locale: {
-                                format: 'DD/MM/YY hh:mm:ss'
+                                format: 'YYYY/MM/DD hh:mm:ss'
                             }
                         }, function(start, end, label) {
                             console.log('New date range selected: ' + start.format('YYYY-MM-DD hh-mm-ss') + ' to ' + end.format('YYYY-MM-DD hh mm-ss') + ' (predefined range: ' + label + ')');
@@ -163,7 +164,6 @@ require_once("connect.php");
 
 
         if (isset($_POST['search'])) {
-            echo ($_POST['datesearch']);
             $search = array("hotel_id", "location", "room_type_id", "min_price", "max_price");
             $search_info = array();
             foreach ($search as $search) {
@@ -173,61 +173,73 @@ require_once("connect.php");
                     $search_info[] = "'$_POST[$search]'";
                 }
             }
+            $datesearch = $_POST['datesearch'];
+            $datearray = explode(" - ", $datesearch);
+            $check_in = $datearray[0];
+            $check_out = $datearray[1];
 
         ?>
             <!-- Main column 2 -->
-            <div class="col-sm">
+            <div class="col-sm vertical-center">
                 <!-- row 1 -->
-                    <form action="result.php" method='post'>
-                        <input type="hidden" name='datesearch' value='<?= $_POST['datesearch'] ?>'>
-                        <table class="table table-striped">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Hotel Name</th>
-                                    <th>Location</th>
-                                    <th>Room Type</th>
-                                    <th>Room Available</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <?php
-                            $sql = 'SELECT hotel.hotel_id,room_type.room_type_id,hotel_name,location,room_type_name,count(*) AS room_available,price FROM hotel 
+                <form action="result.php" method='post'>
+                    <div class="row">
+
+                        <input type="hidden" name='check_in' value='<?= $check_in ?>'>
+                        <input type="hidden" name='check_out' value='<?= $check_out ?>'>
+                    </div>
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Hotel Name</th>
+                                <th>Location</th>
+                                <th>Room Type</th>
+                                <th>Room Available</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <?php
+                        $sql = 'SELECT hotel.hotel_id,room_type.room_type_id,hotel_name,location,room_type_name,count(*) AS room_available,price FROM hotel 
                                 inner join hotel_room on hotel.hotel_id = hotel_room.hotel_id 
                                 inner join room_type on hotel_room.room_type_id = room_type.room_type_id
+                                LEFT JOIN booking ON booking.room_id = hotel_room.room_id
                                 WHERE (hotel.hotel_id = ' . $search_info[0] . ') AND (hotel.location = ' . $search_info[1] . ') AND (hotel_room.room_type_id = ' . $search_info[2] . ')
-                                AND (hotel_room.price BETWEEN ' . $search_info[3] . ' AND ' . $search_info[4] . ') GROUP BY hotel_name,hotel_room.room_type_id ORDER BY price';
-                            $result = $mysqli->query($sql);
-                            if (!$result) {
-                                echo "Select failed. Error: " . $mysqli->error;
-                                return false;
-                            }
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row['hotel_name'] . "</td>";
-                                echo "<td>" . $row['location'] . "</td>";
-                                echo "<td>" . $row['room_type_name'] . "</td>";
-                                echo "<td>" . $row['room_available'] . "</td>";
+                                AND (hotel_room.price BETWEEN ' . $search_info[3] . ' AND ' . $search_info[4] . ')
+                                AND  (((date_start NOT BETWEEN "'.$check_in.'" AND "'.$check_out.'") AND (date_end NOT BETWEEN "'.$check_in.'" AND "'.$check_out.'")) OR booking.booking_id IS NULL)
+                                GROUP BY hotel_name,hotel_room.room_type_id ORDER BY price';
 
-                                echo "<td> <select name='" . $row['hotel_id'] . "/" . $row['room_type_id'] . "'>";
-                                for ($x = 0; $x <= $row['room_available']; $x++) {
-                                    echo "<option value=" . $x . ">" . $x . "</option>";
-                                } ?>
-                                </select>
-                                </td>
-                                <td><?= $row['price'] ?> </td>
-                                </tr>
+                        $result = $mysqli->query($sql);
+                        if (!$result) {
+                            echo "Select failed. Error: " . $mysqli->error;
+                            return false;
+                        }
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['hotel_name'] . "</td>";
+                            echo "<td>" . $row['location'] . "</td>";
+                            echo "<td>" . $row['room_type_name'] . "</td>";
+                            echo "<td>" . $row['room_available'] . "</td>";
 
-                            <?php } ?>
-                        </table>
+                            echo "<td> <select name='" . $row['hotel_id'] . "/" . $row['room_type_id'] . "'>";
+                            for ($x = 0; $x <= $row['room_available']; $x++) {
+                                echo "<option value=" . $x . ">" . $x . "</option>";
+                            } ?>
+                            </select>
+                            </td>
+                            <td><?= $row['price'] ?> </td>
+                            </tr>
 
-                        <button type="submit" name="booking_submit" class="btn btn-success">Book Now!</button>
-                    </form>
+                        <?php } ?>
+                    </table>
+
+                    <button type="submit" name="booking_submit" class="btn btn-success">Book Now!</button>
+                </form>
             <?php } ?>
             </div>
     </div>
-    <div class="row">
-        <a class="btn btn-primary" href="main.php">Back</a>
+
+    <a type='button' class="btn btn-primary" href="main.php">Back</a>
     </div>
 </body>
 

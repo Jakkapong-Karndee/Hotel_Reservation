@@ -17,10 +17,10 @@
       <div class="row">
         <div class="col-md-12 mt-3 text-center">
           <h2><label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username">
+            <input type="text" placeholder="Enter Username" name="username" required>
           </h2>
           <h2><label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password">
+            <input type="password" placeholder="Enter Password" name="password" required>
           </h2>
           <div class="row">
             <div class="col-sm"></div>

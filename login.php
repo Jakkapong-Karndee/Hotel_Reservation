@@ -21,7 +21,7 @@ $stmt->bind_result($user_id, $first_name, $position);
 $stmt->store_result();
 while ($stmt->fetch()) {
 }
-$_SESSION['user_id'] = $user_id;
+$_SESSION['User_ID'] = $user_id;
 $_SESSION['first_name'] = $first_name;
 $_SESSION['position'] = $position;
 

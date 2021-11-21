@@ -15,8 +15,8 @@
 			echo "INSERT failed. Error: ".$mysqli->error ;
 			return false;
 			}
-        echo '<script>alert("register successful!")</script>';
-		header("Location: ");	// <-- Not link yet //
+        //echo '<script>alert("register successful!")</script>';
+		header("Location: register_hotel.php");	
 		}
 		?>
 	

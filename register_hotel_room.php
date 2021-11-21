@@ -20,7 +20,7 @@
 		<span class="navbar-brand mb-0 h1">Register Hotel Room</span>
 	</nav>
 	<p></p>
-	<form action="register_insert_hotel_room.php" method='post' name='form0'>
+	<form action="register_insert_hotel_room.php" method='post'>
 		<div class="container">
 			<!-- Row 1 -->
 			<div class="row">
@@ -49,6 +49,7 @@
 						?>
 					</select>
 				</div>
+				<div class="col-sm"></div>
 			</div>
 			<!-- Row 2 -->
 			<div class="row">
@@ -77,32 +78,36 @@
 						?>
 					</select>
 				</div>
+				<div class="col-sm"></div>
 			</div>
 			<!-- Row 3 -->
 			<div class="row">
 				<div class="col-sm">
 					<h5>Room No. Start</h5>
 				</div>
-				<!-- Row 4 -->
-				<div class="row">
-						<input type="text" name="room_start">
-						<h5>to</h5><input type="text" name="room_end">
-					
+				<div class="col-sm">
+					<input type="text" name="room_start">
+					<h5>to</h5><input type="text" name="room_end">
 				</div>
-				<!-- Row 5 -->
-				<div class="row">
-					<div class="col-sm">
-						<h5>Prices</h5>
-					</div>
-					<div class="col-sm">
-						<input type="text" name="prices">
-					</div>
+				<div class="col-sm"></div>
+			</div>
+			<div class="col-sm"></div>
+			<!-- Row 4 -->
+			<div class="row">
+				<div class="col-sm">
+					<h5>Prices</h5>
 				</div>
-				<p></p>
-				<button class='btn btn-danger' type='submit' name='su' value='Submit'>Register</button>
-				<p></p>
+				<div class="col-sm">
+					<input type="text" name="prices">
+				</div>
+				<div class="col-sm"></div>
+			</div>
+		</div>
+		<button class ='btn btn-danger' type='submit' name='room_submit' value = 'Submit'>Register</button>
 	</form>
+	<p></p>
 	<a class='btn btn-primary' href='main.php'>Back</a>
+	
 </body>
 
 </html>
