@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2021 at 07:34 AM
+-- Generation Time: Nov 21, 2021 at 04:36 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -52,6 +52,19 @@ CREATE TABLE `booking` (
   `transaction_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`booking_id`, `guest_id`, `room_id`, `hotel_id`, `date_start`, `date_end`, `transaction_id`) VALUES
+(28, 4, 10, 4, '2021-11-21 01:00:00', '2021-11-24 01:00:00', 12),
+(29, 4, 11, 4, '2021-11-21 01:00:00', '2021-11-24 01:00:00', 12),
+(30, 4, 16, 4, '2021-11-21 01:00:00', '2021-11-24 01:00:00', 12),
+(31, 4, 20, 5, '2021-11-21 01:00:00', '2021-11-24 01:00:00', 12),
+(32, 4, 20, 5, '2021-12-30 04:00:00', '2022-01-02 10:00:00', 13),
+(33, 5, 16, 4, '2021-11-21 05:00:00', '2021-11-24 05:00:00', 14),
+(34, 5, 20, 5, '2022-01-14 05:00:00', '2022-01-31 03:00:00', 15);
+
 -- --------------------------------------------------------
 
 --
@@ -69,7 +82,8 @@ CREATE TABLE `guest_detail` (
 --
 
 INSERT INTO `guest_detail` (`guest_id`, `passport_id`, `user_id`) VALUES
-(4, 32543453, 1);
+(4, 32543453, 1),
+(5, 352, 3);
 
 -- --------------------------------------------------------
 
@@ -89,7 +103,8 @@ CREATE TABLE `hotel` (
 
 INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `location`) VALUES
 (4, 'John\'s hotel', 'Johnland'),
-(5, 'Jim Hotel', 'Jimland');
+(5, 'Jim Hotel', 'Jimland'),
+(6, 'Jack Hotel', 'Jackland');
 
 -- --------------------------------------------------------
 
@@ -122,7 +137,18 @@ INSERT INTO `hotel_room` (`room_id`, `hotel_id`, `room_type_id`, `room_no`, `roo
 (18, 4, 5, 202, 'Available', 2000),
 (19, 4, 5, 203, 'Available', 2000),
 (20, 5, 6, 300, 'Available', 3000),
-(21, 5, 6, 301, 'Available', 3000);
+(21, 5, 6, 301, 'Available', 3000),
+(22, 6, 4, 120, 'Available', 900),
+(23, 6, 4, 121, 'Available', 900),
+(24, 6, 4, 122, 'Available', 900),
+(25, 6, 4, 123, 'Available', 900),
+(26, 6, 4, 124, 'Available', 900),
+(27, 6, 4, 125, 'Available', 900),
+(28, 6, 4, 126, 'Available', 900),
+(29, 6, 4, 127, 'Available', 900),
+(30, 6, 4, 128, 'Available', 900),
+(31, 6, 4, 129, 'Available', 900),
+(32, 6, 4, 130, 'Available', 900);
 
 -- --------------------------------------------------------
 
@@ -179,6 +205,16 @@ CREATE TABLE `transaction` (
   `pay_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `transaction`
+--
+
+INSERT INTO `transaction` (`transaction_id`, `staff_id`, `payment_type`, `payment_status`, `total_cost`, `pay_date`) VALUES
+(12, 4, 'Cash', 'paid', 7000, '2021-11-21'),
+(13, NULL, 'Cash', NULL, 3000, NULL),
+(14, NULL, 'Cash', NULL, 2000, NULL),
+(15, NULL, 'Cash', NULL, 3000, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -202,7 +238,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `first_name`, `last_name`, `email`, `phone`, `position`, `username`, `password`) VALUES
 (1, 'guest1', 'guest1', 'guest1', '45345453', 'Guest', 'guest1', 'guest1'),
-(2, 'staff1', 'staff1', 'staff1', '543', 'Staff', 'staff1', 'staff1');
+(2, 'staff1', 'staff1', 'staff1', '543', 'Staff', 'staff1', 'staff1'),
+(3, 'guest2', 'guest2', 'guest2', '425', 'Guest', 'guest2', 'guest2');
 
 --
 -- Indexes for dumped tables
@@ -272,25 +309,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `guest_detail`
 --
 ALTER TABLE `guest_detail`
-  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `hotel`
 --
 ALTER TABLE `hotel`
-  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `hotel_room`
 --
 ALTER TABLE `hotel_room`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `room_type`
@@ -308,13 +345,13 @@ ALTER TABLE `staff_detail`
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(45) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(45) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
