@@ -56,8 +56,7 @@ $user_id = $_SESSION['User_ID'];
     <div class="Name">
       <?php
       echo "<h3>Name: " . $first_name . "<h3>";
-      echo $_SESSION['query'];
-      echo print_r($_SESSION['data']);
+  
       ?>
     </div>
 
