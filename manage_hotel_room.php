@@ -13,11 +13,23 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 
-<body class="p-3 mb-2 bg-info text-white">
+<body class="p-3 mb-2 bg-light text-dark">
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container"> <a class="navbar-brand" href="#">
+				<b> Hotel_reservation</b>
+			</a>
+			<ul class="nav pi-draggable" draggable="true">
+				<li class="nav-item">
+					<a class="btn btn-danger" type="button" href="logout.php">logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
     <div class="py-5">
-        <div class="container p-3 mb-2 bg-light text-dark">
+        <div class="container">
             <div class="row">
-                <h1 class="display-4">List of Transaction</h1>
+                <h1>List of Transaction</h1>
                 <table class="table table-striped">
                     <thead class="thead-dark">
                         <tr>
@@ -79,10 +91,10 @@ session_start();
 
 
 
-        <div class="container p-3 mb-2 bg-light text-dark">
+        <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="display-4">Manage Hotel Room</h1>
+                    <h1>Manage Hotel Room</h1>
                 </div>
             </div>
             <div class="row">
@@ -147,11 +159,12 @@ session_start();
                         </table>
                         <div class="col-md-12 text-center d-md-flex justify-content-between align-items-center">
                             <ul class="nav d-flex justify-content-center">
-                            </ul> <a class="btn btn-primary" href="main.php">Back</a>
+                            </ul> 
                         </div>
                     </div>
                 </div>
             </div>
+            <a class="btn btn-primary" href="main.php">Back</a>
         </div>
     </div>
 </body>

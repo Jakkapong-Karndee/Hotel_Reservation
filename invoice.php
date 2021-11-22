@@ -14,10 +14,21 @@ $User_ID = $_SESSION['User_ID'];
 </head>
 
 <body class="p-3 mb-2 bg-light text-dark">
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container"> <a class="navbar-brand" href="#">
+        <b> Hotel_reservation</b>
+      </a>
+      <ul class="nav pi-draggable" draggable="true">
+        <li class="nav-item">
+          <a class="btn btn-danger" type="button" href="logout.php">logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
     <p></p>
-    <nav class="navbar navbar-light bg-light">
-        <span class="navbar-brand mb-0 h1">Invoice</span>
-    </nav>
+    
+        <h1>Invoice</h1>
+    
     <div class="container">
         <table class="table table-striped">
             <thead>
