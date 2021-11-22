@@ -12,6 +12,7 @@
         $phone = $_POST['phone'];
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $password = md5($password);
 		// Performing insert query execution
 		// here our table name is user
 		$sql = "INSERT INTO user(first_name, last_name, email, phone, position,username, password) 

@@ -10,7 +10,8 @@ else{
 // Define $username and $password
 $username = $_POST['username'];
 $password = $_POST['password'];
-
+//hash function for security
+$password = md5($password);
 // SQL query to fetch information of registerd users and finds user match.
 $query = "SELECT user_id, first_name, position from User where username=? AND password=? LIMIT 1";
 // To protect MySQL injection for Security purpose

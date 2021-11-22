@@ -45,7 +45,7 @@ $user_id = $_SESSION['User_ID'];
 <body class="p-3 mb-2 bg-light text-dark">
   <nav class="navbar navbar-dark bg-dark">
     <div class="container"> <a class="navbar-brand" href="#">
-        <b> Hotel_reservation</b>
+        <b> Hotel reservation</b>
       </a>
       <ul class="nav pi-draggable" draggable="true">
         <li class="nav-item">

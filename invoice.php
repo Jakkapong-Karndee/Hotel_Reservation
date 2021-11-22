@@ -16,7 +16,7 @@ $User_ID = $_SESSION['User_ID'];
 <body class="p-3 mb-2 bg-light text-dark">
   <nav class="navbar navbar-dark bg-dark">
     <div class="container"> <a class="navbar-brand" href="#">
-        <b> Hotel_reservation</b>
+        <b> Hotel reservation</b>
       </a>
       <ul class="nav pi-draggable" draggable="true">
         <li class="nav-item">
@@ -35,8 +35,7 @@ $User_ID = $_SESSION['User_ID'];
                 <tr>
                     <th>Transaction ID</th>
                     <th>Hotel Name</th>
-                    <th>Room No.</th>
-                    <th>Room Type</th>
+                    
                     <th>Cost</th>
                     <th>Payment Type</th>
                     <th>Start Reserve Date</th>
@@ -46,15 +45,13 @@ $User_ID = $_SESSION['User_ID'];
             </thead>
             <tbody>
                 <?php
-                $q = "select booking.transaction_id,hotel_name, room_no,room_type_name,total_cost,payment_type,date_start, date_end, payment_status,price from
+                $q = "select booking.transaction_id,hotel_name,total_cost,payment_type,date_start, date_end, payment_status from
                 booking 
                 inner join transaction on booking.transaction_id = transaction.transaction_id 
-                inner join hotel_room on booking.room_id = hotel_room.room_id 
                 INNER JOIN hotel ON booking.hotel_id = hotel.hotel_id
-                INNER JOIN room_type ON room_type.room_type_id = hotel_room.room_type_id
                 INNER JOIN guest_detail ON booking.guest_id = guest_detail.guest_id
                 INNER JOIN user ON user.user_id = guest_detail.user_id
-                where user.user_id = '$User_ID' ;";
+                where user.user_id = '$User_ID' GROUP BY transaction_id;";
                 $result = $mysqli->query($q);
                 if (!$result) {
                     echo "Select failed. Error: " . $mysqli->error;
@@ -62,21 +59,17 @@ $User_ID = $_SESSION['User_ID'];
                 }
 
                 while ($row = $result->fetch_array()) { ?>
-                <?php ?>
+                <?php if (!isset($row['payment_status'])) {
+                      $row['payment_status'] = "Unpaid";
+                    } ?>
                 <tr>
                     <td><?= $row['transaction_id'] ?></td>
                     <td><?= $row['hotel_name'] ?></td>
-                    <td><?= $row['room_no'] ?></td>
-                    <td><?= $row['room_type_name'] ?></td>
-                    <td><?= $row['price'] ?></td>
+                    <td><?= $row['total_cost'] ?></td>
                     <td><?= $row['payment_type'] ?>
                     <td><?= $row['date_start'] ?></td>
                     <td><?= $row['date_end'] ?></td>
                     <td><?= $row['payment_status'] ?></td>
-                    <!--  <select name = "room_status" >
-                              <option value ="availabled">Availabled</option>
-                              <option value ="reserved">Reserved</option>
-                            </select> -->
 
                 </tr>
             <?php } ?>
