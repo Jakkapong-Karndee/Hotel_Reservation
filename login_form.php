@@ -11,7 +11,7 @@
   <form action="login.php" method="post">
     <p></p>
     <div class="imgcontainer text-center">
-      <img src="login_logo.jpg" alt="logo" class="logo">
+      <img src="login_logo.jpg"  width="500px" height="300px" alt="logo" class="logo">
     </div>
     <div class="container">
       <div class="row">
