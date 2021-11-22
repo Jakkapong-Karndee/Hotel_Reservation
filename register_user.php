@@ -13,11 +13,17 @@
     <title>Register User Account</title>
 </head>
 
-<body>
-    <p></p>
-    <nav class="navbar navbar-light bg-light">
-    <span class="navbar-brand mb-0 h1">Register User Account</span>
+<body class="p-3 mb-2 bg-light text-dark">
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container"> <a class="navbar-brand" href="#">
+        <b> Hotel_reservation</b>
+      </a>
+      <ul class="nav pi-draggable" draggable="true">
+      </ul>
+    </div>
   </nav>
+ 
+        <h2>Register User Account</h2>
     <p></p>
     <form action="register_insert_user.php" method='post'>
         <div class="container">
